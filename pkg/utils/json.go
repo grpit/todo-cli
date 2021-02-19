@@ -30,6 +30,22 @@ func WriteJSONToFile(project interface{}, path string) error {
 	if err := encoder.Encode(project); err != nil {
 		return err
 	}
+	return nil
+}
 
+// ReadJSONFromFile Reads the file with the specified json format.
+func ReadJSONFromFile(project interface{}, path string) error {
+	file, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	defer file.Close()
+
+	if err != nil {
+		return err
+	}
+
+	decoder := json.NewDecoder(file)
+
+	if err := decoder.Decode(project); err != nil {
+		return err
+	}
 	return nil
 }
