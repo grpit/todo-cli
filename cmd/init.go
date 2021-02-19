@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -23,26 +25,34 @@ type Project struct {
 	Created string `json:"createdAt"`
 }
 
+var filename = ".todo.json"
+
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initiates a project in current folder or git root.",
 	Long:  `Initiates a project in current folder or git root.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var filename = ".todo.json"
-		var project string
-		repo := vcs.GetRepo()
+		repo, path := getFilePath()
+
+		if err := utils.CreateFileWithPerm(path); err != nil {
+			fmt.Println(Colors["Red"] + "A project has already been initialised." + Colors["Reset"])
+			return nil
+		}
 
 		fmt.Print(Colors["Blue"] + "What would you like to name your project ? " + Colors["Reset"])
-		fmt.Scanln(&project)
+
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		projectName := scanner.Text()
 
 		projectJSON := Project{
-			Name:    project,
+			Name:    projectName,
 			Todos:   []Todo{},
 			Created: time.Now().UTC().String(),
 		}
 
-		if err := utils.WriteJSONToFile(projectJSON, filepath.Join(repo, filename)); err != nil {
+		if err := utils.WriteJSONToFile(projectJSON, path); err != nil {
 			return err
 		}
 
@@ -54,4 +64,10 @@ var initCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+}
+
+func getFilePath() (string, string) {
+	repo := vcs.GetRepo()
+	path := filepath.Join(repo, filename)
+	return repo, path
 }
