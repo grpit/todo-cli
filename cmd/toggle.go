@@ -42,6 +42,22 @@ var toggleCmd = &cobra.Command{
 		todoID = todoID - 1
 		todo := projectData.Todos[todoID]
 		projectData.Todos[todoID].Done = !projectData.Todos[todoID].Done
+
+		// Sorting todos based on undone after toggle
+		// Think of a better wa to do this rather than full sort
+		var done []Todo
+		var undone []Todo
+
+		for _, t := range projectData.Todos {
+			if t.Done {
+				done = append(done, t)
+			} else {
+				undone = append(undone, t)
+			}
+		}
+		undone = append(undone, done...)
+		projectData.Todos = undone
+
 		err = utils.WriteJSONToFile(projectData, path)
 
 		if err != nil {

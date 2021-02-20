@@ -24,7 +24,11 @@ var listCmd = &cobra.Command{
 		}
 
 		for _, todo := range projectData.Todos {
-			fmt.Println(Colors["Cyan"] + todo.Name + Colors["Reset"])
+			if todo.Done {
+				fmt.Printf(" [%sx%s] %s%s%s\n", Colors["Red"], Colors["Reset"], Colors["Red"], todo.Name, Colors["Reset"])
+			} else {
+				fmt.Printf(" [ ] %s%s%s\n", Colors["Cyan"], todo.Name, Colors["Reset"])
+			}
 		}
 	},
 }
