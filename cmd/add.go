@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"reflect"
 
 	"github.com/grpit/todo-cli/pkg/utils"
 	"github.com/spf13/cobra"
@@ -14,7 +13,7 @@ var addCmd = &cobra.Command{
 	Short: "Adds a todo to the current project.",
 	Long:  `Adds a todo to the current project.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 || reflect.TypeOf(args[0]).String() != "string" {
+		if len(args) == 0 {
 			fmt.Println(Colors["Red"] + "Please pass a name for the todo in quotes." + Colors["Reset"])
 		}
 
@@ -36,6 +35,7 @@ var addCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		fmt.Printf("%sAdded %s%s%s Successfully.%s\n", Colors["Green"], Colors["Cyan"], todo.Name, Colors["Green"], Colors["Reset"])
 		return nil
 	},
 }

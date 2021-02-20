@@ -24,7 +24,7 @@ var listCmd = &cobra.Command{
 		}
 
 		for _, todo := range projectData.Todos {
-			fmt.Println(Colors["Green"] + todo.Name + Colors["Reset"])
+			fmt.Println(Colors["Cyan"] + todo.Name + Colors["Reset"])
 		}
 	},
 }
