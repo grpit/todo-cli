@@ -21,6 +21,7 @@ func CreateFileWithPerm(path string) error {
 
 // WriteJSONToFile writes any type to json in the .todo.json file
 func WriteJSONToFile(project interface{}, path string) error {
+	os.Create(path)
 	file, _ := os.OpenFile(path, os.O_WRONLY, os.ModePerm)
 	defer file.Close()
 
